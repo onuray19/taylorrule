@@ -1,0 +1,31 @@
+install.packages("dplyr")
+install.packages("ggplot2")
+install.packages("corrplot")
+install.packages("ARDL")
+install.packages("labeling")
+install.packages("farver")
+
+library("dplyr")
+library("ggplot2")
+library("corrplot")
+library("ARDL")
+library("labeling")
+library("farver")
+
+url <- "https://raw.githubusercontent.com/onuray19/dataset1/refs/heads/main/veriler2.txt"
+data <- read.delim(url, sep = "\t", header = TRUE, stringsAsFactors = FALSE)
+
+data <- data.frame(x= rnorm(100), y= rnorm(100))
+
+ggplot(data, aes(x=ffd, y= outputgap)) +geom_point() + labs(title = "Scatter Plot of Federal Funds Rate vs Output Gap", x="Federal Funds Rate", y="Output Gap") + theme_minimal()
+ggplot(data, aes(x=ffd, y= cpi)) +geom_point() + labs(title = "Scatter Plot of Federal Funds Rate vs Consumer Price Index", x="Federal Funds Rate", y="Consumer Price Index") + theme_minimal()
+ggplot(data, aes(x=ffd, y= inflationgap)) +geom_point() + labs(title = "Scatter Plot of Federal Funds Rate vs Expected Inflation", x="Federal Funds Rate", y="Inflation Gap") + theme_minimal()
+
+
+cor_mat <- cor(data %>% select(ffd, outputgap, cpi,inflationgap))
+corrplot(cor_mat, method="number")
+
+summary(data)
+
+ardlmodel<- ardl(ffd ~ inflationgap + outputgap, data=data, order=2)
+summary(ardlmodel)
